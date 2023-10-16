@@ -26,3 +26,4 @@ compile_commands.json
 /simavr/x64/Debug
 /simavr/libelf-master
 /simavr/x64/Release
+/simavr/Debug
