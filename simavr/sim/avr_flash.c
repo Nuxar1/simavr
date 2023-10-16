@@ -106,7 +106,16 @@ avr_flash_ioctl(
 						/* serial# bytes are ordered bizarelly */
 						/* NOTE: Not all AVR that have sigrd have a
 						 * serial number, currenly we return one anyway */
-						case 0x0e ... 0x17: {
+						case 0x0e:
+						case 0x0f:
+						case 0x10:
+						case 0x11:
+						case 0x12:
+						case 0x13:
+						case 0x14:
+						case 0x15:
+						case 0x16:
+						case 0x17: {
 							static const uint8_t idx[] = {
 								1,0,3,2,5,4,0,6,7,8
 							};

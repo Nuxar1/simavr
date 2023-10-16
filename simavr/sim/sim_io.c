@@ -198,10 +198,12 @@ avr_iomem_getirq(
 	// if given a name, replace the default one...
 	if (name) {
 		int l = strlen(name);
-		char n[l + 10];
+		char* n = malloc(l + 10);
+		if (!n) return NULL;
 		sprintf(n, "avr.io.%s", name);
 		free((void*)avr->io[a].irq[index].name);
 		avr->io[a].irq[index].name = strdup(n);
+		free(n);
 	}
 	return avr->io[a].irq + index;
 }

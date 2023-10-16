@@ -373,6 +373,9 @@ typedef struct avr_symbol_t {
 	const char  symbol[0];
 } avr_symbol_t;
 
+avr_t*
+avr_make_mcu_from_maker(
+	const avr_kind_t* maker);
 // locate the maker for mcu "name" and allocates a new avr instance
 avr_t *
 avr_make_mcu_by_name(

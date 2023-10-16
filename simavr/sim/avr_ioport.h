@@ -124,6 +124,12 @@ typedef struct avr_ioport_t {
 } avr_ioport_t;
 
 void avr_ioport_init(avr_t * avr, avr_ioport_t * port);
+void
+avr_ioport_write(
+	struct avr_t* avr,
+	avr_io_addr_t addr,
+	uint8_t v,
+	void* param);
 
 #define AVR_IOPORT_DECLARE(_lname, _cname, _uname) \
 	.port ## _lname = { \

@@ -62,13 +62,6 @@ static inline void network_release(void)
 
 // native Linux
 
-#include <netinet/in.h>
-#include <netinet/tcp.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <sys/time.h>
-#include <poll.h>
-
 static inline int network_init(void)
 {
 	// nothing to do

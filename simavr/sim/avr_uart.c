@@ -32,13 +32,13 @@
 #endif
 
 #include <stdio.h>
-#include <unistd.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include "avr_uart.h"
 #include "sim_hex.h"
 #include "sim_time.h"
 #include "sim_gdb.h"
+#include "windows_api.h"
 
 //#define TRACE(_w) _w
 #ifndef TRACE

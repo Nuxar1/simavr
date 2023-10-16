@@ -3,7 +3,7 @@
 
 	Copyright 2008, 2010 Michel Pollet <buserror@gmail.com>
 
- 	This file is part of simavr.
+	This file is part of simavr.
 
 	simavr is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <libgen.h>
 #include <string.h>
 #include <signal.h>
 #include "sim_avr.h"
@@ -88,6 +87,16 @@ sig_int(
 	if (avr)
 		avr_terminate(avr);
 	exit(0);
+}
+
+char* basename(const char* path)
+{
+	char* filename = strrchr(path, '\\');
+	if (filename == NULL)
+		filename = path;
+	else
+		filename++;
+	return filename;
 }
 
 int
@@ -232,16 +241,17 @@ main(
 
 	// Frequency and MCU type were set early so they can be checked when
 	// loading a hex file. Set them again because they can also be set
- 	// in an ELF firmware file.
+	// in an ELF firmware file.
 
 	if (strlen(name))
 		strcpy(f.mmcu, name);
 	if (f_cpu)
 		f.frequency = f_cpu;
 
+	//avr = avr_make_mcu_from_maker(&mega644);
 	avr = avr_make_mcu_by_name(f.mmcu);
 	if (!avr) {
-		fprintf(stderr, "%s: AVR '%s' not known\n", argv[0], f.mmcu);
+		fprintf(stderr, "%s: AVR '%s' not known\n", argv[0],f.mmcu);
 		exit(1);
 	}
 	avr_init(avr);

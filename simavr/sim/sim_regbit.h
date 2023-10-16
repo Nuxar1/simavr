@@ -3,7 +3,7 @@
 
 	Copyright 2008, 2009 Michel Pollet <buserror@gmail.com>
 
- 	This file is part of simavr.
+	This file is part of simavr.
 
 	simavr is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -68,8 +68,8 @@ avr_regbit_setto(
 		return 0;
 	m = (uint8_t)(rb.mask << rb.bit);
 	avr_core_watch_write(avr, a,
-                             (uint8_t)((avr->data[a] & ~(m)) |
-                                       ((v << rb.bit) & m)));
+							 (uint8_t)((avr->data[a] & ~(m)) |
+									   ((v << rb.bit) & m)));
 	return (uint8_t)((avr->data[a] >> rb.bit) & rb.mask);
 }
 
@@ -89,7 +89,7 @@ avr_regbit_setto_raw(
 		return 0;
 	m = (uint8_t)(rb.mask << rb.bit);
 	avr_core_watch_write(avr, a,
-                             (uint8_t)((avr->data[a] & ~(m)) | ((v) & m)));
+							 (uint8_t)((avr->data[a] & ~(m)) | ((v) & m)));
 	return (uint8_t)((avr->data[a]) & (rb.mask << rb.bit));
 }
 
@@ -112,7 +112,7 @@ avr_regbit_get(
  */
 static inline uint8_t
 avr_regbit_from_value(
-	avr_t * avr __attribute__((unused)),
+	avr_t * avr,
 	avr_regbit_t rb,
 	uint8_t value)
 {

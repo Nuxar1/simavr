@@ -36,7 +36,7 @@
 
 DEFINE_FIFO(avr_vcd_log_t, avr_vcd_fifo);
 
-#define strdupa(__s) strcpy(alloca(strlen(__s)+1), __s)
+#define strdupa(__s) strcpy(malloc(strlen(__s)+1), __s)
 
 static void
 _avr_vcd_notify(
@@ -539,7 +539,8 @@ avr_vcd_add_signal(
 
 	/* manufacture a nice IRQ name */
 	int l = strlen(name);
-	char iname[10 + l + 1];
+	char* iname = malloc(10 + l + 1);
+	if (!iname) return -1;
 	if (signal_bit_size > 1)
 		sprintf(iname, "%d>vcd.%s", signal_bit_size, name);
 	else
@@ -550,6 +551,7 @@ avr_vcd_add_signal(
 	avr_irq_register_notify(&s->irq, _avr_vcd_notify, vcd);
 
 	avr_connect_irq(signal_irq, &s->irq);
+	free(iname);
 	return 0;
 }
 

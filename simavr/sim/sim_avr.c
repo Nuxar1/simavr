@@ -24,8 +24,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <unistd.h>
-#include <sys/time.h>
 #include "sim_avr.h"
 #include "sim_core.h"
 #include "sim_time.h"
@@ -77,17 +75,19 @@ avr_get_time_stamp(
 		avr_t * avr )
 {
 	uint64_t stamp;
-#ifndef CLOCK_MONOTONIC_RAW
-	/* CLOCK_MONOTONIC_RAW isn't portable, here is the POSIX alternative.
-	 * Only downside is that it will drift if the system clock changes */
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
-	stamp = (((uint64_t)tv.tv_sec) * 1E9) + (tv.tv_usec * 1000);
-#else
-	struct timespec tp;
-	clock_gettime(CLOCK_MONOTONIC_RAW, &tp);
-	stamp = (tp.tv_sec * 1E9) + tp.tv_nsec;
-#endif
+//#ifndef CLOCK_MONOTONIC_RAW
+//	/* CLOCK_MONOTONIC_RAW isn't portable, here is the POSIX alternative.
+//	 * Only downside is that it will drift if the system clock changes */
+//	struct timeval tv;
+//	gettimeofday(&tv, NULL);
+//	stamp = (((uint64_t)tv.tv_sec) * 1E9) + (tv.tv_usec * 1000);
+//#else
+//	struct timespec tp;
+//	clock_gettime(CLOCK_MONOTONIC_RAW, &tp);
+//	stamp = (tp.tv_sec * 1E9) + tp.tv_nsec;
+//#endif
+	// convert the above to windows time
+	stamp = (uint64_t)time(NULL) * 1000000000;
 	if (!avr->time_base)
 		avr->time_base = stamp;
 	return stamp - avr->time_base;
@@ -109,7 +109,7 @@ avr_init(
 #endif
 	avr->data_names = calloc(avr->ioend + 1, sizeof (char *));
 	/* put "something" in the serial number */
-	uint32_t r = getpid() + random();
+	uint32_t r = rand();
 	for (int i = 0; i < ARRAY_SIZE(avr->serial); i++)
 		avr->serial[i] = r >> (i * 3);
 	AVR_LOG(avr, LOG_TRACE, "%s init\n", avr->mmcu);
@@ -425,6 +425,16 @@ avr_core_allocate(
 	return (avr_t *)b;
 }
 
+avr_t*
+avr_make_mcu_from_maker(
+	const avr_kind_t* maker)
+{
+	avr_t* avr = maker->make();
+	AVR_LOG(avr, LOG_TRACE, "Starting %s - flashend %04x ramend %04x e2end %04x\n",
+		avr->mmcu, avr->flashend, avr->ramend, avr->e2end);
+	return avr;
+}
+
 avr_t *
 avr_make_mcu_by_name(
 		const char *name)
@@ -442,10 +452,7 @@ avr_make_mcu_by_name(
 		return NULL;
 	}
 
-	avr_t * avr = maker->make();
-	AVR_LOG(avr, LOG_TRACE, "Starting %s - flashend %04x ramend %04x e2end %04x\n",
-			avr->mmcu, avr->flashend, avr->ramend, avr->e2end);
-	return avr;
+	return avr_make_mcu_from_maker(maker);
 }
 
 static void

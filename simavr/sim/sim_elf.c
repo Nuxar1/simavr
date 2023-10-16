@@ -25,17 +25,23 @@
 
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
 #ifdef HAVE_LIBELF
+#define __LIBELF_INTERNAL__ 1
 #include <libelf.h>
 #include <gelf.h>
+#pragma comment(lib, "libelf.lib")
 #else
 #undef ELF_SYMBOLS
 #define ELF_SYMBOLS 0
+#endif
+
+#ifdef _MSC_VER
+#  include <intrin.h>
+#  define __builtin_popcount __popcnt
 #endif
 
 #include "sim_elf.h"

@@ -86,7 +86,7 @@ _avr_twi_status_set(
 		avr_raise_interrupt(p->io.avr, &p->twi);
 }
 
-static __attribute__ ((unused)) inline uint8_t
+static inline uint8_t
 _avr_twi_status_get(
 		avr_twi_t * p)
 {

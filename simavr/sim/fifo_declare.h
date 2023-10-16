@@ -89,7 +89,7 @@ extern "C" {
 #define FIFO_VOLATILE
 #endif
 #ifndef FIFO_SYNC
-#define FIFO_SYNC __sync_synchronize()
+#define FIFO_SYNC _mm_mfence()
 #endif
 
 #ifndef FIFO_ZERO_INIT

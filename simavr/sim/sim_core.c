@@ -100,10 +100,10 @@ static const char *where(avr_t *avr)
 	return "";
 }
 
-#define STATE(_f, argsf ...)	if (avr->trace) {				\
+#define STATE(_f, ...)	if (avr->trace) {				\
 	const char *symn = where(avr);							\
 	if (symn)												\
-		printf("%04x: %-25s " _f, avr->pc, symn, ## argsf);	\
+		printf("%04x: %-25s " _f, avr->pc, symn, ## __VA_ARGS__);	\
 }
 
 #define SREG() if (avr->trace && donttrace == 0) {	  \
@@ -153,7 +153,7 @@ void crash(avr_t* avr)
 #else
 #define T(w)
 #define REG_TOUCH(a, r)
-#define STATE(_f, args...)
+#define STATE(_f, ...)
 #define SREG()
 
 void crash(avr_t* avr)
@@ -301,7 +301,7 @@ inline uint16_t _avr_sp_get(avr_t * avr)
 	return avr->data[R_SPL] | (avr->data[R_SPH] << 8);
 }
 
-inline void _avr_sp_set(avr_t * avr, uint16_t sp)
+void _avr_sp_set(avr_t * avr, uint16_t sp)
 {
 	_avr_set_r16le(avr, R_SPL, sp);
 }

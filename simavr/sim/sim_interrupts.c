@@ -23,7 +23,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <strings.h>
 #include "sim_interrupts.h"
 #include "sim_avr.h"
 #include "sim_core.h"

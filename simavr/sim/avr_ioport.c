@@ -89,7 +89,7 @@ avr_ioport_update_irqs(
  	}
 }
 
-static void
+void
 avr_ioport_write(
 		struct avr_t * avr,
 		avr_io_addr_t addr,

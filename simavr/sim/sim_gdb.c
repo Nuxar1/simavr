@@ -20,13 +20,12 @@
  */
 
 #include "sim_network.h"
-#include <sys/time.h>
 #include <stdlib.h>
+#include <winsock.h>
+#pragma comment(lib, "ws2_32.lib")
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
 #include <errno.h>
-#include <pthread.h>
 #include "sim_avr.h"
 #include "sim_core.h" // for SET_SREG_FROM, READ_SREG_INTO
 #include "sim_hex.h"
@@ -268,21 +267,23 @@ gdb_write_register(
 		int regi,
 		uint8_t * src )
 {
-	switch (regi) {
-		case 0 ... 31:
-			g->avr->data[regi] = *src;
-			return 1;
-		case 32:
-			g->avr->data[R_SREG] = *src;
-			SET_SREG_FROM(g->avr, *src);
-			return 1;
-		case 33:
-			g->avr->data[R_SPL] = src[0];
-			g->avr->data[R_SPH] = src[1];
-			return 2;
-		case 34:
-			g->avr->pc = src[0] | (src[1] << 8) | (src[2] << 16) | (src[3] << 24);
-			return 4;
+	if (regi >= 0 && regi < 32) {
+		g->avr->data[regi] = *src;
+		return 1;
+	}
+	else if (regi == 32) {
+		g->avr->data[R_SREG] = *src;
+		SET_SREG_FROM(g->avr, *src);
+		return 1;
+	}
+	else if (regi == 33) {
+		g->avr->data[R_SPL] = src[0];
+		g->avr->data[R_SPH] = src[1];
+		return 2;
+	}
+	else if (regi == 34) {
+		g->avr->pc = src[0] | (src[1] << 8) | (src[2] << 16) | (src[3] << 24);
+		return 4;
 	}
 	return 1;
 }
@@ -293,24 +294,18 @@ gdb_read_register(
 		int regi,
 		char * rep )
 {
-	switch (regi) {
-		case 0 ... 31:
-			sprintf(rep, "%02x", g->avr->data[regi]);
-			break;
-		case 32: {
-				uint8_t sreg;
-				READ_SREG_INTO(g->avr, sreg);
-				sprintf(rep, "%02x", sreg);
-			}
-			break;
-		case 33:
-			sprintf(rep, "%02x%02x", g->avr->data[R_SPL], g->avr->data[R_SPH]);
-			break;
-		case 34:
-			sprintf(rep, "%02x%02x%02x00",
-				g->avr->pc & 0xff, (g->avr->pc>>8)&0xff, (g->avr->pc>>16)&0xff);
-			break;
+	if (regi >= 0 && regi <= 31)
+		sprintf(rep, "%02x", g->avr->data[regi]);
+	else if (regi == 32) {
+uint8_t sreg;
+		READ_SREG_INTO(g->avr, sreg);
+		sprintf(rep, "%02x", sreg);
 	}
+	else if (regi == 33)
+		sprintf(rep, "%02x%02x", g->avr->data[R_SPL], g->avr->data[R_SPH]);
+	else if (regi == 34)
+				sprintf(rep, "%02x%02x%02x00",
+					g->avr->pc & 0xff, (g->avr->pc>>8)&0xff, (g->avr->pc>>16)&0xff);
 	return strlen(rep);
 }
 
@@ -810,7 +805,7 @@ gdb_network_handler(
 
 		if (g->s == -1) {
 			perror("gdb_network_handler accept");
-			sleep(5);
+			Sleep(5000);
 			return 1;
 		}
 		int i = 1;
@@ -822,7 +817,7 @@ gdb_network_handler(
 	if (g->s != -1 && FD_ISSET(g->s, &read_set)) {
 		uint8_t buffer[1024];
 
-		ssize_t r = recv(g->s, buffer, sizeof(buffer)-1, 0);
+		size_t r = recv(g->s, buffer, sizeof(buffer)-1, 0);
 
 		if (r == 0) {
 			DBG(printf("%s connection closed\n", __FUNCTION__);)
@@ -835,7 +830,7 @@ gdb_network_handler(
 		}
 		if (r == -1) {
 			perror("gdb_network_handler recv");
-			sleep(1);
+			Sleep(1000);
 			return 1;
 		}
 		buffer[r] = 0;

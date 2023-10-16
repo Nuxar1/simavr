@@ -143,15 +143,12 @@ avr_acomp_irq_notify(
 {
 	avr_acomp_t * p = (avr_acomp_t *)param;
 
-	switch (irq->irq) {
-		case ACOMP_IRQ_AIN0 ... ACOMP_IRQ_AIN1: {
-				p->ain_values[irq->irq - ACOMP_IRQ_AIN0] = value;
-				avr_schedule_sync_state(p->io.avr, param);
-			} 	break;
-		case ACOMP_IRQ_ADC0 ... ACOMP_IRQ_ADC15: {
-				p->adc_values[irq->irq - ACOMP_IRQ_ADC0] = value;
-				avr_schedule_sync_state(p->io.avr, param);
-			} 	break;
+	if (irq->irq >= ACOMP_IRQ_AIN0 && irq->irq <= ACOMP_IRQ_AIN1) {
+		p->ain_values[irq->irq - ACOMP_IRQ_AIN0] = value;
+		avr_schedule_sync_state(p->io.avr, param);
+	} else if (irq->irq >= ACOMP_IRQ_ADC0 && irq->irq <= ACOMP_IRQ_ADC15) {
+		p->adc_values[irq->irq - ACOMP_IRQ_ADC0] = value;
+		avr_schedule_sync_state(p->io.avr, param);
 	}
 }
 
