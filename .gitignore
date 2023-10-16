@@ -22,3 +22,7 @@ perf.data
 .bash_history
 compile_commands.json
 .cache
+/simavr/.vs/simavr
+/simavr/x64/Debug
+/simavr/libelf-master
+/simavr/x64/Release
