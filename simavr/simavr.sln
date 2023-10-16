@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.7.34003.232
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simavr", "simavr.vcxproj", "{0277227A-A7F5-486B-B261-146A36F7F72D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1F6C9A28-676D-4257-8E17-0F22C5E82F4D} = {1F6C9A28-676D-4257-8E17-0F22C5E82F4D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libelf", "vendor\libelf\VC\libelf.vcxproj", "{1F6C9A28-676D-4257-8E17-0F22C5E82F4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +26,14 @@ Global
 		{0277227A-A7F5-486B-B261-146A36F7F72D}.Release|x64.Build.0 = Release|x64
 		{0277227A-A7F5-486B-B261-146A36F7F72D}.Release|x86.ActiveCfg = Release|Win32
 		{0277227A-A7F5-486B-B261-146A36F7F72D}.Release|x86.Build.0 = Release|Win32
+		{1F6C9A28-676D-4257-8E17-0F22C5E82F4D}.Debug|x64.ActiveCfg = Debug|Win32
+		{1F6C9A28-676D-4257-8E17-0F22C5E82F4D}.Debug|x64.Build.0 = Debug|Win32
+		{1F6C9A28-676D-4257-8E17-0F22C5E82F4D}.Debug|x86.ActiveCfg = Debug|Win32
+		{1F6C9A28-676D-4257-8E17-0F22C5E82F4D}.Debug|x86.Build.0 = Debug|Win32
+		{1F6C9A28-676D-4257-8E17-0F22C5E82F4D}.Release|x64.ActiveCfg = Release|Win32
+		{1F6C9A28-676D-4257-8E17-0F22C5E82F4D}.Release|x64.Build.0 = Release|Win32
+		{1F6C9A28-676D-4257-8E17-0F22C5E82F4D}.Release|x86.ActiveCfg = Release|Win32
+		{1F6C9A28-676D-4257-8E17-0F22C5E82F4D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
