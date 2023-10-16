@@ -27,7 +27,12 @@ compile_commands.json
 /simavr/libelf-master
 /simavr/x64/Release
 /simavr/Debug
+
 *.vcxproj
 *.vcxproj.user
 *.vcxproj.filters
 *.sln
+
+.vs/
+bin/
+bin-int/
