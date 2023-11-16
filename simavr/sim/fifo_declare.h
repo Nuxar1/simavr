@@ -89,7 +89,7 @@ extern "C" {
 #define FIFO_VOLATILE
 #endif
 #ifndef FIFO_SYNC
-#if defined(WIN32) || defined(WIN64)
+#if defined(_WIN32) || defined(_WIN64)
 #define FIFO_SYNC _mm_mfence()
 #else
 #define FIFO_SYNC __sync_synchronize()

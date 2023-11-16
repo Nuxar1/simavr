@@ -1,5 +1,5 @@
 
-if os.host() == "system:windows" then
+if os.host() == "windows" then
 	include "simavr/vendor/libelf"
 end
 project "simavr"
