@@ -38,7 +38,9 @@
 #include "sim_hex.h"
 #include "sim_time.h"
 #include "sim_gdb.h"
+#if defined(_WIN64 ) || defined(_WIN32)
 #include "windows_api.h"
+#endif
 
 //#define TRACE(_w) _w
 #ifndef TRACE

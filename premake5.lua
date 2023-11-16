@@ -1,4 +1,7 @@
-include "simavr/vendor/libelf"
+
+if os.host() == "system:windows" then
+	include "simavr/vendor/libelf"
+end
 project "simavr"
 	kind "StaticLib"
 	language "C++"
@@ -6,11 +9,6 @@ project "simavr"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-	defines
-	{
-		"HAVE_LIBELF",
-	}
 
 	links
 	{
@@ -433,6 +431,7 @@ project "simavr"
 	filter "system:windows"
 		systemversion "latest"
 		cppdialect "C++20"
+		defines { "HAVE_LIBELF" }
 
 	filter "system:linux"
 		pic "On"

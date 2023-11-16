@@ -21,8 +21,15 @@
 
 #include "sim_network.h"
 #include <stdlib.h>
+#if defined(_WIN32) || defined(_WIN64)
 #include <winsock.h>
 #pragma comment(lib, "ws2_32.lib")
+#define sleep(x) Sleep((x)*1000)
+#else
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -805,7 +812,7 @@ gdb_network_handler(
 
 		if (g->s == -1) {
 			perror("gdb_network_handler accept");
-			Sleep(5000);
+			sleep(5);
 			return 1;
 		}
 		int i = 1;
@@ -830,7 +837,7 @@ gdb_network_handler(
 		}
 		if (r == -1) {
 			perror("gdb_network_handler recv");
-			Sleep(1000);
+			sleep(1);
 			return 1;
 		}
 		buffer[r] = 0;
