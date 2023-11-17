@@ -215,8 +215,10 @@ avr_ioport_reset(
 		avr_io_t * port)
 {
 	avr_ioport_t * p = (avr_ioport_t *)port;
-	for (int i = 0; i < IOPORT_IRQ_PIN_ALL; i++)
+	for (int i = 0; i < IOPORT_IRQ_PIN_ALL; i++) {
+		p->io.irq[i].value = 0;
 		avr_irq_register_notify(p->io.irq + i, avr_ioport_irq_notify, p);
+	}
 	avr_irq_register_notify(p->io.irq + IOPORT_IRQ_PIN_ALL_IN,
 					avr_ioport_irq_notify, p);
 }
