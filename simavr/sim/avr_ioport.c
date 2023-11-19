@@ -231,7 +231,6 @@ avr_ioport_ioctl(
 {
 	avr_ioport_t * p = (avr_ioport_t *)port;
 	avr_t * avr = p->io.avr;
-	int res = -1;
 
 	// all IOCTls require some sort of valid parameter, bail if not
 	if (!io_param)
@@ -268,9 +267,8 @@ avr_ioport_ioctl(
 					.ddr = avr->data[p->r_ddr],
 					.pin = avr->data[p->r_pin],
 				};
-				if (io_param)
-					*((avr_ioport_state_t*)io_param) = state;
-				res = 0;
+				*((avr_ioport_state_t*)io_param) = state;
+				return 0;
 			}
 			/*
 			 * Set the default IRQ values when pin is set as input
@@ -279,12 +277,12 @@ avr_ioport_ioctl(
 				avr_ioport_external_t * m = (avr_ioport_external_t*)io_param;
 				p->external.pull_mask = m->mask;
 				p->external.pull_value = m->value;
-				res = 0;
+				return 0;
 			}
 		}
 	}
 
-	return res;
+	return -1;
 }
 
 static const char * irq_names[IOPORT_IRQ_COUNT] = {

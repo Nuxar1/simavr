@@ -41,19 +41,26 @@ static avr_cycle_count_t avr_extint_poll_level_trig(
 
 	/* Check for change of interrupt mode. */
 
-	if (avr_regbit_get_array(avr, p->eint[poll->eint_no].isc, 2))
+	const avr_regbit_t* isc = p->eint[poll->eint_no].isc;
+	const uint8_t isc0 = avr_regbit_get(avr, isc[0]);
+	const uint8_t isc1 = avr_regbit_get(avr, isc[1]);
+	if (isc0 || isc1)
 		goto terminate_poll;
+	//if (avr_regbit_get_array(avr, p->eint[poll->eint_no].isc, 2))
+	//	goto terminate_poll;
 
 	uint8_t port = p->eint[poll->eint_no].port_ioctl & 0xFF;
 	avr_ioport_state_t iostate;
-	if (avr_ioctl(avr, AVR_IOCTL_IOPORT_GETSTATE( port ), &iostate) < 0)
-		goto terminate_poll;
+	uint8_t pin_index = (port - 'A') * 3;
+	iostate.pin = avr->data[AVR_IO_TO_DATA(pin_index)];
+	//if (avr_ioctl(avr, AVR_IOCTL_IOPORT_GETSTATE( port ), &iostate) < 0)
+	//	goto terminate_poll;
 	uint8_t bit = ( iostate.pin >> p->eint[poll->eint_no].port_pin ) & 1;
 	if (bit)
 		goto terminate_poll; // Only poll while pin level remains low
 
 	if (avr->sreg[S_I]) {
-		uint8_t raised = avr_regbit_get(avr, p->eint[poll->eint_no].vector.raised) || p->eint[poll->eint_no].vector.pending;
+		uint8_t raised = p->eint[poll->eint_no].vector.pending || avr_regbit_get(avr, p->eint[poll->eint_no].vector.raised);
 		if (!raised)
 			avr_raise_interrupt(avr, &p->eint[poll->eint_no].vector);
 	}
